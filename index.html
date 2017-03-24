@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Feedback</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style type="text/css">
+    .error {
+        font-size: .8rem;
+        color: red;
+    }
+    
+    
+    }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo"><img src='assets/img/safari.svg'></a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="index.html" class='waves-effect' id="home">Home</a></li>
+                <li><a href="about.html" class='waves-effect' id="about">About</a></li>
+                <li><a href="program-selection.html" class='waves-effect' id="programs">Programs</a></li>
+                <li><a href="feedback.html" class='waves-effect' id="feedback">Feedback</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="index.html" class='waves-effect' id="home">Home</a></li>
+                <li><a href="about.html" class='waves-effect' id="about">About</a></li>
+                <li><a href="program-selection.html" class='waves-effect' id="programs">Programs</a></li>
+                <li><a href="feedback.html" class='waves-effect' id="feedback">Feedback</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+  
+        <div class="row">
+            <form id="feedbackForm" class="col s10" class="card-panel hoverable">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="name" type="text" name="name" >
+                        <label for="name" id="name-field" data-error="incorrect" data-success="correct">Your Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="email" type="email" name="email" >
+                        <label for="email" id="email-feild" data-error="incorrect" data-success="correct">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="zipcode" type="text" name="zipcode">
+                        <label for="zipcode" data-error="incorrect" data-success="correct">ZIP Code</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="subject" type="text" name="subject" class="clearable">
+                        <label for="subject" id="subject-feild" data-error="incorrect" data-success="correct">Subject</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="message" name="message" class="materialize-textarea clearable" data-length="1000"></textarea>
+                        <label for="textarea" id="message-feild">Message</label>
+                    </div>
+                </div>
+                 <div class="row">
+            <div class="input-field col s10">
+                <div class="right">
+                    <button id="submit" class="btn waves-effect waves-light " type="submit" name="action"> Send
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+            </form>
+        </div>
+       
+        <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/additional-methods.js"></script>
+          
+        <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            // $.validator.addMethod('RigthZip', function(value, element){
+            // 	 return this.optional(element)
+            // 	 || value.length >= 6
+            // 	 && /^9[0-7]\d\d\d$.test(value);
+            // }, 'Invalid Zip code\')
+
+            $.validator.addMethod( "zipcodeCA", function( value, element ) {
+	return this.optional( element ) || /^9[0-6]\d\d\d$/.test( value );
+}, "The specified ZIP Code is invalid" );
+
+			// validate signup form on keyup and submit
+			$("#feedbackForm").validate({
+				rules: {
+					name: {
+						required: true,
+						
+						minlength: 2
+					},
+					email: {
+						required: true,
+						email: true,
+						minlength: 5
+					},
+					zipcode: {
+						required: true,
+						zipcodeCA : true,
+						minlength: 5,
+						maxlength: 5
+					},
+					subject: {
+						required: true,
+					
+						minlength: 2	
+					},
+					
+					message: {
+						required: true,
+					
+						minlength: 5
+					},
+				},
+				messages: {
+					name: {
+						required: "Please enter your Name",
+						minlength: "Your Name must consist of at least 2 characters",
+						
+					},
+					zipcode: {
+						required: "Please enter a Zip code",
+						maxlength: "Zip code must consist of 5 characters",
+						minlength: "Zip code must consist of 5 characters"
+					},
+					subject: {
+						required: "Please provide the Subject",
+						minlength: "Your Subject must be at least 1 characters long"
+
+					},
+					message: {
+						required: "Please provide your Message",
+						minlength: "Your Message must be at least 5 characters long"
+						
+					},
+					email: "Please enter your email address",
+					minlength: "Your Message must be at least 5 characters long"	
+				},
+
+				 errorElement : 'div',
+				errorPlacement: function(error, element) {
+					
+
+						var placement = $(element).data('error');
+			          if (placement) {
+			            $(placement).append(error)
+			          } else {
+			            error.insertAfter(element);
+			          } 
+				}
+			});
+        });
+        </script>
+</body>
+
+</html>
